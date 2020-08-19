@@ -14,11 +14,21 @@ public class csvReader {
     private URL url;
     private Scanner scan;
 
+    public String[] getFirstLine(URL url) throws IOException{
+        this.url = url;
+        InputStream in = url.openStream();
+        scan = new  Scanner(in);
+
+        String[] arr = scan.nextLine().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        return arr;
+
+
+    }
+
     public csvReader(URL url) throws IOException {
         this.url = url;
-
         InputStream in = url.openStream();
-         scan = new  Scanner(in);
+        scan = new  Scanner(in);
     }
     List<LineObj> objList = new ArrayList<LineObj>();
     List<LineObj> sortedList = new ArrayList<LineObj>();
@@ -27,7 +37,8 @@ public class csvReader {
         scan.reset();
         scan.nextLine();
         while (scan.hasNextLine()){
-        String[] arr = scan.nextLine().split(",");
+
+        String[] arr = scan.nextLine().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
         objList.add(new LineObj(arr[1],arr[11],arr[10],arr[23]));
         }
         for (int y = 0; y < 2020 ; y++) {
@@ -37,9 +48,7 @@ public class csvReader {
             }
             int counter = Integer.parseInt(objList.get(i).getTitle_year());
 
-            if (counter == y) {
-                System.out.println("jackpot");
-                sortedList.add(objList.get(i));
+            if (counter == y) { sortedList.add(objList.get(i));
             }
 
            // System.out.println(y);
